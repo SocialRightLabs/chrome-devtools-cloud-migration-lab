@@ -1,0 +1,87 @@
+name: Repo Guardrails
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  guardrails:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check blocked tracked paths
+        shell: bash
+        run: |
+          set -euo pipefail
+          blocked='(^|/)(\.env|\.venv|venv|env|__pycache__|python-docs-samples|package-lock\.json)(/|$)|(^|/)\.git(/|$)'
+          if git ls-files | grep -E "$blocked" >/tmp/blocked_paths.txt; then
+            echo "Blocked tracked paths found:"
+            cat /tmp/blocked_paths.txt
+            exit 1
+          fi
+          echo "OK: no blocked tracked paths"
+
+      - name: Check obvious secret patterns without printing values
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=$(git ls-files | grep -Ev '(^|/)(\.git|node_modules|\.venv|venv|env|__pycache__)(/|$)' || true)
+          if [ -z "$files" ]; then
+            echo "OK: no files to scan"
+            exit 0
+          fi
+
+          patterns='(AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{35}|-----BEGIN (RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----|ghp_[0-9A-Za-z_]{20,}|github_pat_[0-9A-Za-z_]{20,}|sk-[A-Za-z0-9]{20,})'
+          found=0
+          while IFS= read -r f; do
+            [ -f "$f" ] || continue
+            count=$( { grep -E -I -o "$patterns" "$f" 2>/dev/null || true; } | wc -l | tr -d ' ')
+            if [ "$count" != "0" ]; then
+              echo "Potential secret pattern in $f ($count matches)"
+              found=1
+            fi
+          done <<< "$files"
+
+          if [ "$found" = "1" ]; then
+            echo "Secret-pattern check failed. Values were not printed."
+            exit 1
+          fi
+
+          echo "OK: no obvious secret patterns"
+
+      - name: Check required docs
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(
+            README.md
+            MODULE_INDEX.md
+            ROADMAP.md
+            CONTRIBUTING.md
+            SECURITY.md
+            AGENTS.md
+            docs/HEALTH_ECOSYSTEM_BOUNDARIES.md
+            docs/GUARDRAILS.md
+            docs/DEVTOOLS_VERIFICATION_GUIDE.md
+            docs/DECISIONS.md
+            templates/MODULE_README_TEMPLATE.md
+            templates/DEVTOOLS_CHECKLIST_TEMPLATE.md
+          )
+          for f in "${required[@]}"; do
+            test -f "$f" || { echo "Missing required file: $f"; exit 1; }
+          done
+          echo "OK: required docs exist"
+
+      - name: Check current module notes
+        shell: bash
+        run: |
+          set -euo pipefail
+          for d in gae-flask-module-1/mod0-baseline gae-flask-module-1/mod1-flask gae-flask-module-1/mod2-cloud-ndb; do
+            ls "$d"/README*.md >/dev/null 2>&1 || { echo "Missing README/module notes in $d"; exit 1; }
+          done
+          echo "OK: module notes exist"
