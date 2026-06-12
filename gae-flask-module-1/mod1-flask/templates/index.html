@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+  <head>
+    <title>VisitMe Example</title>
+  </head>
+  <body>
+    <h1>VisitMe example</h1>
+    <h2>Last 10 visits</h2>
+    <ul>
+      {% for visit in visits %}
+        <li>{{ visit }}</li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

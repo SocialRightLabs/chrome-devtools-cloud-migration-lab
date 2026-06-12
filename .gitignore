@@ -1,0 +1,29 @@
+# Python
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Logs / local noise
+*.log
+.gcloud/
+
+# Node accidental files
+node_modules/
+package-lock.json
+
+# Nested copied repos / source dumps
+gae-flask-module-1/python-docs-samples/
+trustable-ai-codelab/
+
+# Secrets / env
+.env
+*.env
+
+# OS/editor
+.DS_Store
+.vscode/
+.idea/
