@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 12 Sources Debugging Demo</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #eef5ff;
+      --surface: rgba(255, 255, 255, 0.92);
+      --surface-strong: #ffffff;
+      --text: #14213d;
+      --muted: #5b6475;
+      --line: #d4ddee;
+      --accent: #1d4ed8;
+      --accent-2: #7c3aed;
+      --shadow: 0 20px 50px rgba(31, 41, 55, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(124, 58, 237, 0.18), transparent 30%),
+        radial-gradient(circle at top right, rgba(29, 78, 216, 0.16), transparent 25%),
+        linear-gradient(180deg, #f7fbff 0%, var(--bg) 100%);
+      line-height: 1.5;
+    }
+
+    header,
+    main,
+    footer {
+      width: min(1100px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 24px 0 8px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.78rem;
+      color: var(--accent-2);
+      font-weight: 700;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    .hero,
+    .panel,
+    .note {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 24px;
+      display: grid;
+      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      align-items: start;
+    }
+
+    .hero-card {
+      padding: 24px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(29, 78, 216, 0.12), rgba(124, 58, 237, 0.12));
+      border: 1px solid rgba(29, 78, 216, 0.12);
+    }
+
+    .panel {
+      margin-top: 22px;
+      padding: 24px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--surface-strong);
+      font: inherit;
+      color: inherit;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+    }
+
+    .secondary {
+      background: #dfe8ff;
+      color: #1e293b;
+    }
+
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid #111827;
+      outline-offset: 3px;
+    }
+
+    .results {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      margin-top: 20px;
+    }
+
+    .result-card,
+    .note {
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid var(--line);
+    }
+
+    .result-value {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-top: 6px;
+    }
+
+    .note {
+      margin-top: 18px;
+      color: var(--muted);
+    }
+
+    .status {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    code {
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: #eff6ff;
+      color: #1e3a8a;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <p class="eyebrow">Module 12 Sources Debugging Demo</p>
+    <h1>Safe Local JavaScript Debugging Practice</h1>
+    <p>
+      This static demo is designed for Chrome DevTools Sources panel practice.
+      It contains one deliberate logic bug so the debugging flow has a concrete root cause to trace.
+    </p>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="demo-title">
+      <div class="hero-card">
+        <h2 id="demo-title">Total calculator</h2>
+        <p>
+          Enter the sample values below, then click <strong>Calculate total</strong>.
+          The demo intentionally miscalculates the discount so you can inspect the bug in Sources.
+        </p>
+
+        <form id="pricing-form" novalidate>
+          <div class="grid">
+            <div>
+              <label for="price">Price</label>
+              <input id="price" name="price" type="number" min="0" value="100" step="1">
+            </div>
+            <div>
+              <label for="quantity">Quantity</label>
+              <input id="quantity" name="quantity" type="number" min="1" value="2" step="1">
+            </div>
+            <div>
+              <label for="discount">Discount</label>
+              <input id="discount" name="discount" type="number" min="0" max="100" value="10" step="1">
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="primary" type="submit">Calculate total</button>
+            <button class="secondary" type="button" id="reset-demo">Reset sample</button>
+          </div>
+        </form>
+
+        <div class="status" id="status" aria-live="polite">
+          Ready for local debugging.
+        </div>
+      </div>
+
+      <div>
+        <div class="note">
+          <h2>Debug hint</h2>
+          <p>
+            The bug is inside the discount calculation function in <code>app.js</code>.
+            Watch the variables, call stack, and computed total while stepping through the code.
+          </p>
+        </div>
+
+        <div class="results" aria-label="Calculated values">
+          <div class="result-card">
+            <div>Subtotal</div>
+            <div class="result-value" id="subtotal">-</div>
+          </div>
+          <div class="result-card">
+            <div>Discount</div>
+            <div class="result-value" id="discount-amount">-</div>
+          </div>
+          <div class="result-card">
+            <div>Final total</div>
+            <div class="result-value" id="final-total">-</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p class="note">
+      Local-only demo. No deploy, cloud resource, API, or secret is involved.
+    </p>
+  </footer>
+
+  <script src="./app.js"></script>
+</body>
+</html>
