@@ -24,7 +24,7 @@ Days 4 and 5 are not planned yet because the source material has not been provid
 
 | Day | Kaggle topic | Repo interpretation | Allowed scope |
 |---|---|---|---|
-| Day 1 | Introduction to Agents & Vibe Coding, AI Studio, Cloud Run, Antigravity 2.0 / IDE / CLI | Cloud-side architecture and deployment gate | Docs only until manual review |
+| Day 1 | Introduction to Agents & Vibe Coding, AI Studio, Cloud Run, Antigravity 2.0 / IDE / CLI | Cloud-side architecture and deployment gate | Docs only (See Day 1 Plan) until manual review |
 | Day 2 | Agent Tools & Interoperability, Antigravity CLI, Google Developer Knowledge MCP server | Local interoperability and tool-calling mock workbench | Local mock implementation only |
 | Day 3 | Agent Skills, Antigravity Skills, Agents CLI, ADK | Reusable skill structure and context management patterns | Local-first implementation only |
 | Day 4 | Not yet sourced | Pending source material | Not planned |
@@ -46,6 +46,7 @@ Document the course mapping before expanding implementation.
 
 Expected outputs:
 - module plan
+- day 1 evidence map (`DAY_1_PLAN.md`)
 - day-by-day evidence map
 - security boundary note
 - manual review gate
