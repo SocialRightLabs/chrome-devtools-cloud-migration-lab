@@ -4,6 +4,12 @@
 
 Capture the minimum evidence needed to prove Cloud Run readiness and post-deploy behavior without mixing it with deployment instructions.
 
+## Evidence Split
+
+- Deployment path: build, container, deploy, rollback
+- Evidence plan: Network, Console, Performance, Cloud logs
+- Approval gate: manual decision before any live mutation command
+
 ## Evidence Categories
 
 ### Local Readiness

@@ -10,6 +10,7 @@
 - [ ] API review points are listed
 - [ ] Rollback path is documented
 - [ ] Evidence plan is separated from deployment path
+- [ ] Approval matrix exists and separates planning from live operations
 - [ ] No deploy, billing, or IAM changes are included
 - [ ] No secrets or private URLs are exposed
 
@@ -24,4 +25,5 @@
 - Missing approval gate
 - Missing rollback path
 - Any attempt to move from planning into live deployment without manual review
+- Any attempt to use this planning branch as a deployment branch
 

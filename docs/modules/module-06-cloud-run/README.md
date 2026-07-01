@@ -17,6 +17,20 @@ This planning set covers:
 - rollback planning
 - DevTools and Cloud Run evidence planning
 
+## Source And Target
+
+Source module:
+
+`gae-flask-module-1/mod5-cloud-run-buildpacks/`
+
+Target module:
+
+`docs/modules/module-06-cloud-run/`
+
+Future runtime target, when planning is later converted into an implementation module:
+
+`gae-flask-module-1/mod6-cloud-run/`
+
 ## Out of Scope
 
 This planning increment does not include:
@@ -37,6 +51,14 @@ Existing Module 06 evidence and gate documents remain available in this folder:
 - `MODULE_06B_CLOUD_RUN_RUNBOOK_APPROVAL.md`
 - `MODULE_06C_PRE_DEPLOY_APPROVAL_GATE.md`
 - `MODULE_06D_FINAL_LOCAL_PREFLIGHT_REPORT.md`
+
+## Planning Extensions
+
+This PR increment adds:
+
+- `RUNTIME_BASELINE.md`
+- `COST_BOUNDARY.md`
+- `APPROVAL_MATRIX.md`
 
 ## Safety Boundary
 
